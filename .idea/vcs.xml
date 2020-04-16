@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/AOPDemo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/CommonLibrary" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/HopeBusiness" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Kotlin-define-view" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Lawbat_Andorid" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/XBinder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/XBinderServer" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/XCompant" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/XEventBus" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/XHandler" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/XSkin" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/syh_android" vcs="Git" />
+  </component>
+</project>
