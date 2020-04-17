@@ -1,4 +1,7 @@
-package com.xia.xglide.glide;
+package com.xia.xglide.glide.interf;
+
+import com.xia.xglide.glide.Resource;
+import com.xia.xglide.glide.interf.K;
 
 /**
  * author : xia chen hui

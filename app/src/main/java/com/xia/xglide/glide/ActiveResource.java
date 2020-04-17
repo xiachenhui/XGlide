@@ -1,11 +1,11 @@
 package com.xia.xglide.glide;
 
-import java.lang.ref.Reference;
+import com.xia.xglide.glide.interf.K;
+
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**

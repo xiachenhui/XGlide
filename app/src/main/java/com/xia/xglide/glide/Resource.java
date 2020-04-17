@@ -2,6 +2,8 @@ package com.xia.xglide.glide;
 
 import android.graphics.Bitmap;
 
+import com.xia.xglide.glide.interf.K;
+
 /**
  * author : xia chen hui
  * email : 184415359@qq.com

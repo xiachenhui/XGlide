@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
+import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.MemoryCache;
+
 /**
  * author : xia chen hui
  * email : 184415359@qq.com
@@ -14,6 +17,8 @@ import android.support.v4.util.LruCache;
  **/
 public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache {
     private ResourceRemoveListener mRemovedListener;
+
+    private  boolean  isRemoved;//是否主动移除
 
     public LruMemoryCache(int maxSize) {
         super(maxSize);
@@ -24,9 +29,16 @@ public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache
         this.mRemovedListener = resourceRemovedListener;
     }
 
+    /**
+     * 内存中移除图片
+     * @param k
+     * @return
+     */
     @Override
     public Resource removeResource(K k) {
+        isRemoved =true;
         Resource resource = remove(k);
+        isRemoved =false;
         return resource;
     }
 
@@ -52,7 +64,8 @@ public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache
      */
     @Override
     protected void entryRemoved(boolean evicted, @NonNull K key, @NonNull Resource oldValue, @Nullable Resource newValue) {
-        if (mRemovedListener != null && oldValue != null) {
+        if (mRemovedListener != null && oldValue != null && !isRemoved) {
+            //没有移除就保存到复用池
             mRemovedListener.onResourceRemoved(oldValue);
         }
     }
