@@ -22,6 +22,11 @@ import com.xia.xglide.glide.load.model.data.DataFetcher;
 
 import java.io.InputStream;
 
+/**
+ * @ author xia chen hui
+ * @ date 2020/4/19 22:24
+ * @ desc : 主页面
+ */
 public class MainActivity extends AppCompatActivity implements Resource.ResourceListener, MemoryCache.ResourceRemoveListener {
     K k;
     private ActiveResource activeResource;
