@@ -1,9 +1,9 @@
-package com.xia.xglide.glide.load.model;
+package com.xia.xglide.glide.load.model.loader;
 
 import android.net.Uri;
 
-import com.xia.xglide.glide.interf.K;
 import com.xia.xglide.glide.load.ObjetKey;
+import com.xia.xglide.glide.load.model.ModelLoaderRegister;
 import com.xia.xglide.glide.load.model.data.HttpUrlFetcher;
 
 import java.io.InputStream;
@@ -27,5 +27,13 @@ public class HttpUrlLoader implements ModelLoader<Uri, InputStream> {
     @Override
     public LoadData<InputStream> buildData(Uri uri) {
         return new LoadData<>(new ObjetKey(uri), new HttpUrlFetcher(uri));
+    }
+
+    public static class Factory implements ModelLoaderFactory<Uri,InputStream>{
+
+        @Override
+        public ModelLoader<Uri, InputStream> build(ModelLoaderRegister register) {
+            return new HttpUrlLoader();
+        }
     }
 }

@@ -9,17 +9,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.xia.xglide.glide.ActiveResource;
+import com.xia.xglide.glide.cache.ActiveResource;
 import com.xia.xglide.glide.interf.BitmapPool;
 import com.xia.xglide.glide.interf.K;
 import com.xia.xglide.glide.interf.LruBitmapPool;
-import com.xia.xglide.glide.LruMemoryCache;
+import com.xia.xglide.glide.cache.LruMemoryCache;
 import com.xia.xglide.glide.interf.MemoryCache;
-import com.xia.xglide.glide.Resource;
-import com.xia.xglide.glide.load.model.HttpUrlLoader;
-import com.xia.xglide.glide.load.model.ModelLoader;
+import com.xia.xglide.glide.cache.Resource;
+import com.xia.xglide.glide.load.model.loader.FileUrlLoader;
+import com.xia.xglide.glide.load.model.loader.HttpUrlLoader;
+import com.xia.xglide.glide.load.model.loader.ModelLoader;
 import com.xia.xglide.glide.load.model.data.DataFetcher;
 
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -46,19 +48,42 @@ public class MainActivity extends AppCompatActivity implements Resource.Resource
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.image);
+
         new Thread() {
             @Override
             public void run() {
                 super.run();
-                loadTest();
+                loadHttpTest();
             }
         }.start();
+        loadFileTest();
+    }
+
+    private void loadFileTest() {
+        Uri uri = Uri.fromFile(new File("sd/xxx.png"));
+        FileUrlLoader fileUrlLoader = new FileUrlLoader(getContentResolver());
+        ModelLoader.LoadData<InputStream> buildData = fileUrlLoader.buildData(uri);
+        buildData.fetcher.loadData(new DataFetcher.DataFetcherCallBack<InputStream>() {
+            @Override
+            public void onFetcherReady(InputStream inputStream) {
+                //解析输入流 获取图片
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                handler.sendEmptyMessage(0);
+            }
+
+            @Override
+            public void onLoadFail(Exception e) {
+
+            }
+        });
 
     }
 
-    private void loadTest() {
+    private void loadHttpTest() {
 
-        Uri uri = Uri.parse("https://image.baidu.com/search/detail?ct=503316480&z=undefined&tn=baiduimagedetail&ipn=d&word=%E5%9B%BE%E7%89%87&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=undefined&hd=undefined&latest=undefined&copyright=undefined&cs=3173584241,3533290860&os=1133571898,402444249&simid=3493630544,246115770&pn=2&rn=1&di=183590&ln=1664&fr=&fmq=1587137314154_R&fm=&ic=undefined&s=undefined&se=&sme=&tab=0&width=undefined&height=undefined&face=undefined&is=0,0&istype=0&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&hs=2&objurl=http%3A%2F%2Fa0.att.hudong.com%2F78%2F52%2F01200000123847134434529793168.jpg&rpstart=0&rpnum=0&adpicid=0&force=undefined");
+        Uri uri = Uri.parse("https://image.baidu.com/search/detail?ct=503316480&z=undefined&tn=baiduimagedetail&ipn=d&word=%E5%9B%BE%E7%89%87&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=undefined&hd=undefined&latest=undefined&copyright=undefined&cs=3173584241,3533290860&os=1133571898,402444249&simid=3493630544," +
+                "246115770&pn=2&rn=1&di=183590&ln=1664&fr=&fmq=1587137314154_R&fm=&ic=undefined&s=undefined&se=&sme=&tab=0&width=undefined&height=undefined&face=undefined&is=0,0&istype=0&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&hs=2&objurl=http%3A%2F%2Fa0.att.hudong.com%2F78%2F52%2F01200000123847134434529793168.jpg" +
+                "&rpstart=0&rpnum=0&adpicid=0&force=undefined");
         HttpUrlLoader httpUrlLoader = new HttpUrlLoader();
         ModelLoader.LoadData<InputStream> inputStreamLoadData = httpUrlLoader.buildData(uri);
         inputStreamLoadData.fetcher.loadData(new DataFetcher.DataFetcherCallBack<InputStream>() {

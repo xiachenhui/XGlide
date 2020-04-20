@@ -1,7 +1,6 @@
 package com.xia.xglide.glide.interf;
 
-import com.xia.xglide.glide.Resource;
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.cache.Resource;
 
 /**
  * author : xia chen hui

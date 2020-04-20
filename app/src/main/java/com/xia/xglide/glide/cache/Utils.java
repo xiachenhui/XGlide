@@ -1,4 +1,4 @@
-package com.xia.xglide.glide;
+package com.xia.xglide.glide.cache;
 
 import java.util.ArrayList;
 import java.util.Collection;

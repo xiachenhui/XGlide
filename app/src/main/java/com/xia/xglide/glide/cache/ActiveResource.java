@@ -1,4 +1,4 @@
-package com.xia.xglide.glide;
+package com.xia.xglide.glide.cache;
 
 import com.xia.xglide.glide.interf.K;
 
@@ -29,6 +29,7 @@ public class ActiveResource {
     public ActiveResource(Resource.ResourceListener resourceListener) {
         this.mResourceListener = resourceListener;
     }
+
     //弱引用的Resource
     static final class ResourceWeakReference extends WeakReference<Resource> {
         private K k;
@@ -114,6 +115,7 @@ public class ActiveResource {
 
     /**
      * 获取资源
+     *
      * @param k
      * @return
      */

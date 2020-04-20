@@ -1,4 +1,4 @@
-package com.xia.xglide.glide;
+package com.xia.xglide.glide.cache;
 
 
 import android.os.Build;
@@ -18,7 +18,7 @@ import com.xia.xglide.glide.interf.MemoryCache;
 public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache {
     private ResourceRemoveListener mRemovedListener;
 
-    private  boolean  isRemoved;//是否主动移除
+    private boolean isRemoved;//是否主动移除
 
     public LruMemoryCache(int maxSize) {
         super(maxSize);
@@ -31,14 +31,15 @@ public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache
 
     /**
      * 内存中移除图片
+     *
      * @param k
      * @return
      */
     @Override
     public Resource removeResource(K k) {
-        isRemoved =true;
+        isRemoved = true;
         Resource resource = remove(k);
-        isRemoved =false;
+        isRemoved = false;
         return resource;
     }
 

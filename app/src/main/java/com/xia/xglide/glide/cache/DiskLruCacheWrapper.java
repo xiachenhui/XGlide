@@ -1,4 +1,4 @@
-package com.xia.xglide.glide;
+package com.xia.xglide.glide.cache;
 
 import android.content.Context;
 import android.support.annotation.Nullable;

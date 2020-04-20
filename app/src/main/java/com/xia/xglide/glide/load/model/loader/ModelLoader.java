@@ -1,4 +1,4 @@
-package com.xia.xglide.glide.load.model;
+package com.xia.xglide.glide.load.model.loader;
 
 /**
  * author : xia chen hui
@@ -8,6 +8,7 @@ package com.xia.xglide.glide.load.model;
  **/
 
 import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.load.model.ModelLoaderRegister;
 import com.xia.xglide.glide.load.model.data.DataFetcher;
 
 /**
@@ -15,6 +16,11 @@ import com.xia.xglide.glide.load.model.data.DataFetcher;
  * @param <Data>  加载成功后的数据类型
  */
 public interface ModelLoader<Model, Data> {
+
+    interface ModelLoaderFactory<Model, Data> {
+        ModelLoader<Model, Data> build(ModelLoaderRegister register);
+    }
+
     /**
      * 加载图片
      *
