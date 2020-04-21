@@ -1,7 +1,6 @@
 package com.xia.xglide.glide.interf;
 
 import java.io.File;
-import java.io.Writer;
 
 /**
  * author : xia chen hui
@@ -15,11 +14,11 @@ public interface DiskCache {
         boolean write(File f);
     }
 
-    File get(K k);
+    File get(Key key);
 
-    void put(K k, Writer writer);
+    void put(Key key, Writer writer);
 
-    void delete(K k);
+    void delete(Key key);
 
     void clear();
 }

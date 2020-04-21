@@ -22,7 +22,7 @@ public class FileUrlFetcher implements DataFetcher<InputStream> {
     }
 
     @Override
-    public void loadData(DataFetcherCallBack<InputStream> callBack) {
+    public void loadData(DataFetcherCallBack<? super InputStream> callBack) {
         InputStream inputStream = null;
         try {
             inputStream = contentResolver.openInputStream(uri);
@@ -46,5 +46,10 @@ public class FileUrlFetcher implements DataFetcher<InputStream> {
     @Override
     public void cancel() {
 
+    }
+
+    @Override
+    public Class<?> getDataClass() {
+        return InputStream.class;
     }
 }

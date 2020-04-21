@@ -78,6 +78,20 @@ public class LruBitmapPool extends LruCache<Integer, Bitmap> implements BitmapPo
     }
 
     @Override
+    public void clearMemory() {
+        evictAll();
+    }
+
+    @Override
+    public void trimMemory(int level) {
+        if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_BACKGROUND) {
+            clearMemory();
+        } else if (level >= android.content.ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) {
+            trimToSize(maxSize() / 2);
+        }
+    }
+
+    @Override
     protected int sizeOf(@NonNull Integer key, @NonNull Bitmap value) {
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {

@@ -1,9 +1,8 @@
 package com.xia.xglide.glide.load;
 
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 
 import java.security.MessageDigest;
-import java.util.Objects;
 
 /**
  * author : xia chen hui
@@ -11,7 +10,7 @@ import java.util.Objects;
  * date : 2020/4/17/017 23:01
  * desc : K的实现类
  **/
-public class ObjetKey implements K {
+public class ObjetKey implements Key {
     private Object object;
 
     public ObjetKey(Object object) {

@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 import com.xia.xglide.glide.interf.MemoryCache;
 
 /**
@@ -15,7 +15,7 @@ import com.xia.xglide.glide.interf.MemoryCache;
  * date : 2020/4/16/016 21:36
  * desc : 内存缓存的实现类
  **/
-public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache {
+public class LruMemoryCache extends LruCache<Key, Resource> implements MemoryCache {
     private ResourceRemoveListener mRemovedListener;
 
     private boolean isRemoved;//是否主动移除
@@ -32,19 +32,29 @@ public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache
     /**
      * 内存中移除图片
      *
-     * @param k
+     * @param key
      * @return
      */
     @Override
-    public Resource removeResource(K k) {
+    public Resource removeResource(Key key) {
         isRemoved = true;
-        Resource resource = remove(k);
+        Resource resource = remove(key);
         isRemoved = false;
         return resource;
     }
 
     @Override
-    protected int sizeOf(@NonNull K key, @NonNull Resource value) {
+    public void clearMemory() {
+
+    }
+
+    @Override
+    public void trimMemory(int level) {
+
+    }
+
+    @Override
+    protected int sizeOf(@NonNull Key key, @NonNull Resource value) {
         //当前Resource所占的内存大小，需要区分版本
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
             //4.4以上 老图片大小
@@ -64,7 +74,7 @@ public class LruMemoryCache extends LruCache<K, Resource> implements MemoryCache
      * @param newValue
      */
     @Override
-    protected void entryRemoved(boolean evicted, @NonNull K key, @NonNull Resource oldValue, @Nullable Resource newValue) {
+    protected void entryRemoved(boolean evicted, @NonNull Key key, @NonNull Resource oldValue, @Nullable Resource newValue) {
         if (mRemovedListener != null && oldValue != null && !isRemoved) {
             //没有移除就保存到复用池
             mRemovedListener.onResourceRemoved(oldValue);

@@ -19,8 +19,12 @@ public interface MemoryCache {
     void setResourceRemovedListener(ResourceRemoveListener resourceRemovedListener);
 
     //添加Resource 到内存
-    Resource put(K k, Resource resource);
+    Resource put(Key key, Resource resource);
 
     //移除内存中的Resource
-    Resource removeResource(K k);
+    Resource removeResource(Key key);
+
+    void clearMemory();
+
+    void trimMemory(int level);
 }

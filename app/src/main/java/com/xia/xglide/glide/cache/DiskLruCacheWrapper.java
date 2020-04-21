@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.xia.xglide.glide.disklrucache.DiskLruCache;
 import com.xia.xglide.glide.interf.DiskCache;
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,14 +44,14 @@ public class DiskLruCacheWrapper implements DiskCache {
         }
     }
 
-    public String getKey(K key) {
+    public String getKey(Key key) {
         key.updateDiskCacheKey(MD);
         return new String(Utils.sha256BytesToHex(MD.digest()));
     }
 
     @Nullable
     @Override
-    public File get(K key) {
+    public File get(Key key) {
         String k = getKey(key);
         File result = null;
         try {
@@ -66,7 +66,7 @@ public class DiskLruCacheWrapper implements DiskCache {
     }
 
     @Override
-    public void put(K key, Writer writer) {
+    public void put(Key key, Writer writer) {
         String k = getKey(key);
         try {
             DiskLruCache.Value current = diskLruCache.get(k);
@@ -88,7 +88,7 @@ public class DiskLruCacheWrapper implements DiskCache {
     }
 
     @Override
-    public void delete(K key) {
+    public void delete(Key key) {
         String k = getKey(key);
         try {
             diskLruCache.remove(k);

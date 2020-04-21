@@ -1,28 +1,20 @@
 package com.xia.xglide;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.xia.xglide.glide.XGlide;
 import com.xia.xglide.glide.cache.ActiveResource;
 import com.xia.xglide.glide.interf.BitmapPool;
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 import com.xia.xglide.glide.interf.LruBitmapPool;
 import com.xia.xglide.glide.cache.LruMemoryCache;
 import com.xia.xglide.glide.interf.MemoryCache;
 import com.xia.xglide.glide.cache.Resource;
-import com.xia.xglide.glide.load.model.loader.FileUrlLoader;
-import com.xia.xglide.glide.load.model.loader.HttpUrlLoader;
-import com.xia.xglide.glide.load.model.loader.ModelLoader;
-import com.xia.xglide.glide.load.model.data.DataFetcher;
-
-import java.io.File;
-import java.io.InputStream;
 
 /**
  * @ author xia chen hui
@@ -30,7 +22,7 @@ import java.io.InputStream;
  * @ desc : 主页面
  */
 public class MainActivity extends AppCompatActivity implements Resource.ResourceListener, MemoryCache.ResourceRemoveListener {
-    K k;
+    Key key;
     private ActiveResource activeResource;
     private LruMemoryCache lruMemoryCache;
     BitmapPool bitmapPool;
@@ -48,69 +40,19 @@ public class MainActivity extends AppCompatActivity implements Resource.Resource
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView = findViewById(R.id.image);
-
-        new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                loadHttpTest();
-            }
-        }.start();
-        loadFileTest();
-    }
-
-    private void loadFileTest() {
-        Uri uri = Uri.fromFile(new File("sd/xxx.png"));
-        FileUrlLoader fileUrlLoader = new FileUrlLoader(getContentResolver());
-        ModelLoader.LoadData<InputStream> buildData = fileUrlLoader.buildData(uri);
-        buildData.fetcher.loadData(new DataFetcher.DataFetcherCallBack<InputStream>() {
-            @Override
-            public void onFetcherReady(InputStream inputStream) {
-                //解析输入流 获取图片
-                bitmap = BitmapFactory.decodeStream(inputStream);
-                handler.sendEmptyMessage(0);
-            }
-
-            @Override
-            public void onLoadFail(Exception e) {
-
-            }
-        });
-
-    }
-
-    private void loadHttpTest() {
-
-        Uri uri = Uri.parse("https://image.baidu.com/search/detail?ct=503316480&z=undefined&tn=baiduimagedetail&ipn=d&word=%E5%9B%BE%E7%89%87&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=undefined&hd=undefined&latest=undefined&copyright=undefined&cs=3173584241,3533290860&os=1133571898,402444249&simid=3493630544," +
-                "246115770&pn=2&rn=1&di=183590&ln=1664&fr=&fmq=1587137314154_R&fm=&ic=undefined&s=undefined&se=&sme=&tab=0&width=undefined&height=undefined&face=undefined&is=0,0&istype=0&ist=&jit=&bdtype=0&spn=0&pi=0&gsm=0&hs=2&objurl=http%3A%2F%2Fa0.att.hudong.com%2F78%2F52%2F01200000123847134434529793168.jpg" +
-                "&rpstart=0&rpnum=0&adpicid=0&force=undefined");
-        HttpUrlLoader httpUrlLoader = new HttpUrlLoader();
-        ModelLoader.LoadData<InputStream> inputStreamLoadData = httpUrlLoader.buildData(uri);
-        inputStreamLoadData.fetcher.loadData(new DataFetcher.DataFetcherCallBack<InputStream>() {
-            @Override
-            public void onFetcherReady(InputStream inputStream) {
-                //解析输入流 获取图片
-                bitmap = BitmapFactory.decodeStream(inputStream);
-                handler.sendEmptyMessage(0);
-
-            }
-
-            @Override
-            public void onLoadFail(Exception e) {
-
-            }
-        });
-
+        XGlide.with(this).asBitmap().load("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587491834483&di=a532d82db7032c1a9877e1d58bf76a4b&imgtype=0&src=http%3A%2F%2Fa3.att.hudong.com%2F14%2F75%2F01300000164186121366756803686.jpg").into(imageView);
     }
 
 
-    public Resource test(K k) {
+
+
+    public Resource test(Key key) {
         //1 先从活动中拿
         activeResource = new ActiveResource(this);
         bitmapPool = new LruBitmapPool(10);
         lruMemoryCache = new LruMemoryCache(10);
         lruMemoryCache.setResourceRemovedListener(this);
-        Resource resource = activeResource.getResource(k);
+        Resource resource = activeResource.getResource(key);
         if (resource != null) {
             resource.acquired();
             return resource;
@@ -118,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements Resource.Resource
 
         //2 从内存中拿
 
-        resource = lruMemoryCache.get(k);
+        resource = lruMemoryCache.get(key);
         if (resource != null) {
             resource.acquired();
             /**
@@ -126,8 +68,8 @@ public class MainActivity extends AppCompatActivity implements Resource.Resource
              *  Lru可能会移除这个resource  或者也可能recycle掉这个resource
              *  如果不移除，下次使用这个resource的时候可以从活动资源中找到，但是可能被recycle掉了
              **/
-            lruMemoryCache.removeResource(k);
-            activeResource.active(k, resource);
+            lruMemoryCache.removeResource(key);
+            activeResource.active(key, resource);
             return resource;
         }
         return null;
@@ -148,15 +90,15 @@ public class MainActivity extends AppCompatActivity implements Resource.Resource
      * 活动缓存
      * 当资源没有正在使用的时候，从活动资源移除到内存缓存
      *
-     * @param k
+     * @param key
      * @param resource
      */
     @Override
-    public void onResourceAcquired(K k, Resource resource) {
+    public void onResourceAcquired(Key key, Resource resource) {
         //活动缓存中移除
-        activeResource.deActive(k);
+        activeResource.deActive(key);
         //加入内存缓存
-        lruMemoryCache.put(k, resource);
+        lruMemoryCache.put(key, resource);
 
     }
 }

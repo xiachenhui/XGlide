@@ -7,7 +7,7 @@ package com.xia.xglide.glide.load.model.loader;
  * desc : XGlide调用
  **/
 
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 import com.xia.xglide.glide.load.model.ModelLoaderRegister;
 import com.xia.xglide.glide.load.model.data.DataFetcher;
 
@@ -28,14 +28,13 @@ public interface ModelLoader<Model, Data> {
      */
     class LoadData<Data> {
         //缓存的Key
-        final K k;
+        public final Key key;
 
         //加载数据的方式
-        public DataFetcher<Data> fetcher;
+        public final DataFetcher<Data> fetcher;
 
-
-        public LoadData(K k, DataFetcher<Data> fetcher) {
-            this.k = k;
+        public LoadData(Key key, DataFetcher<Data> fetcher) {
+            this.key = key;
             this.fetcher = fetcher;
         }
     }

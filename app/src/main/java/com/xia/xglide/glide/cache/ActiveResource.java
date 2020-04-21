@@ -1,6 +1,6 @@
 package com.xia.xglide.glide.cache;
 
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  **/
 public class ActiveResource {
 
-    private Map<K, ResourceWeakReference> mWeakMap = new HashMap<>();
+    private Map<Key, ResourceWeakReference> mWeakMap = new HashMap<>();
     //引用队列
     private ReferenceQueue<Resource> mQueue;
 
@@ -32,27 +32,27 @@ public class ActiveResource {
 
     //弱引用的Resource
     static final class ResourceWeakReference extends WeakReference<Resource> {
-        private K k;
+        private Key key;
 
         public ResourceWeakReference(Resource referent) {
             super(referent);
         }
 
-        public ResourceWeakReference(K k, Resource referent, ReferenceQueue<? super Resource> q) {
+        public ResourceWeakReference(Key key, Resource referent, ReferenceQueue<? super Resource> q) {
             super(referent, q);
-            this.k = k;
+            this.key = key;
         }
     }
 
     /**
      * 加入活动缓存
      *
-     * @param k
+     * @param key
      * @param resource
      */
-    public void active(K k, Resource resource) {
-        mResourceListener.onResourceAcquired(k, resource);
-        mWeakMap.put(k, new ResourceWeakReference(k, resource, getResourceQueue()));
+    public void active(Key key, Resource resource) {
+        mResourceListener.onResourceAcquired(key, resource);
+        mWeakMap.put(key, new ResourceWeakReference(key, resource, getResourceQueue()));
     }
 
     /**
@@ -60,8 +60,8 @@ public class ActiveResource {
      *
      * @return
      */
-    public Resource deActive(K k) {
-        ResourceWeakReference reference = mWeakMap.remove(k);
+    public Resource deActive(Key key) {
+        ResourceWeakReference reference = mWeakMap.remove(key);
         if (reference != null) {
             return reference.get();
         }
@@ -100,7 +100,7 @@ public class ActiveResource {
                         try {
                             //被回收的引用，每次回收都会调用此方法
                             ResourceWeakReference ref = (ResourceWeakReference) mQueue.remove();
-                            mWeakMap.remove(ref.k);
+                            mWeakMap.remove(ref.key);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -116,11 +116,11 @@ public class ActiveResource {
     /**
      * 获取资源
      *
-     * @param k
+     * @param key
      * @return
      */
-    public Resource getResource(K k) {
-        ResourceWeakReference resourceWeakReference = mWeakMap.get(k);
+    public Resource getResource(Key key) {
+        ResourceWeakReference resourceWeakReference = mWeakMap.get(key);
         if (resourceWeakReference != null) {
             return resourceWeakReference.get();
         }

@@ -26,8 +26,10 @@ public interface DataFetcher<Data> {
     }
 
     //加载数据
-    void loadData(DataFetcherCallBack<Data> dataDataFetcherCallBack);
+    void loadData(DataFetcherCallBack<? super Data> dataDataFetcherCallBack);
 
     //取消加载
     void cancel();
+
+    Class<?> getDataClass();
 }

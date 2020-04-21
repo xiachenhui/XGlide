@@ -2,7 +2,7 @@ package com.xia.xglide.glide.cache;
 
 import android.graphics.Bitmap;
 
-import com.xia.xglide.glide.interf.K;
+import com.xia.xglide.glide.interf.Key;
 
 /**
  * author : xia chen hui
@@ -18,7 +18,11 @@ public class Resource {
     //计数为0的时候调用回收
     private ResourceListener mResourceListener;
 
-    private K k;
+    private Key key;
+
+    public Resource(Bitmap mBitmap) {
+        this.mBitmap = mBitmap;
+    }
 
     public Bitmap getBitmap() {
         return mBitmap;
@@ -29,11 +33,11 @@ public class Resource {
     }
 
     public interface ResourceListener {
-        void onResourceAcquired(K k, Resource resource);
+        void onResourceAcquired(Key key, Resource resource);
     }
 
-    public void setResourceListener(ResourceListener resourceListener) {
-        this.k = k;
+    public void setResourceListener(Key key, ResourceListener resourceListener) {
+        this.key = key;
         this.mResourceListener = resourceListener;
     }
 
@@ -53,7 +57,7 @@ public class Resource {
      */
     public void release() {
         if (--mAcquired == 0) {
-            mResourceListener.onResourceAcquired(k, this);
+            mResourceListener.onResourceAcquired(key, this);
         }
     }
 
